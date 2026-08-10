@@ -1,0 +1,12 @@
+{
+  "schema": "glaciereq.repo-capabilities.v1",
+  "repository": "GlacierEQ/redis-stream-claim-cursor-fence",
+  "capabilities": [
+    {
+      "id": "stream-claim-cursor-fence",
+      "name": "Stream Claim Cursor Fence",
+      "status": "SCAFFOLD",
+      "module": "src/stream_claim_cursor_fence.py"
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "schema": "glaciereq.proof-receipt.v1",
+  "repository": "GlacierEQ/redis-stream-claim-cursor-fence",
+  "source_sha": "42890268a2f036397d51d06dbd39bb77f3b1b174c83250f8c86f9819980a6283",
+  "proof_id": "elite-redis-stream-claim-cursor-fence-1786356687",
+  "environment": {
+    "python": "/Users/kcbflux/.local/bin/python3.11",
+    "PYTHONPATH": "/Users/kcbflux/GlacierEQ_Swarm/job-app/repos/redis-stream-claim-cursor-fence:/Users/kcbflux/GlacierEQ_Swarm/job-app/repos/redis-stream-claim-cursor-fence/src",
+    "entry": "unittest"
+  },
+  "tests": [
+    "/Users/kcbflux/.local/bin/python3.11 -m unittest discover -s tests -v (x2)"
+  ],
+  "adversarial_tests": [
+    "tests/test_adversarial.py"
+  ],
+  "runtime": {
+    "operate": "scripts/operate.py (x2)",
+    "dual_run_ok": true,
+    "proof_dual_run_ok": true
+  },
+  "result": "PASS",
+  "limitations": [
+    "not production deployed",
+    "reference implementation only"
+  ],
+  "timestamp": "2026-08-10T10:11Z",
+  "artifact_hashes": {
+    "operability_receipt": "ec300529d66e097328ce02abbda1ac0a26b9b504052c5689ab8a3f5b8dca1bfa"
+  }
+}
