@@ -1,50 +1,61 @@
 # Stream Claim Cursor Fence
 
-Independent GlacierEQ portfolio exhibit aligned to **Redis** operating themes.
+Independent GlacierEQ portfolio implementation aligned to **Redis** operating themes.
 
-> **Not affiliated.** This repository is not affiliated with, endorsed by, employed by, or deployed at Redis.
-> No proprietary access, production deployment, customer impact, or company partnership is claimed.
+> **Not affiliated.** This repository is not affiliated with, endorsed by, employed by, or deployed at Redis. No proprietary access, production deployment, customer impact, or company partnership is claimed.
 
-## Bottleneck (GlacierEQ hypothesis)
+## Purpose
 
-Consumers claim stream completeness without cursor/fence semantics under failover.
+Make a stream consumer prove completeness against an exact cursor and fencing epoch so failover cannot turn a stale consumer into a false “fully processed” claim.
 
-**Brick wall:** Silent success without receipts; affiliation or production claims without evidence.
+## Implemented fence
 
-**Observed public pressure (snapshot hypothesis):** Public market pressure toward AI-enabled products and operators (hypothesis only).
+`StreamClaimCursorFence` binds every completeness claim to:
 
-## Innovation mechanism
+- stream and consumer identity;
+- current fence epoch and token;
+- start, observed, acknowledged, and complete-through cursors;
+- pending entry count;
+- optional previous claim digest.
 
-**Stream Claim Cursor Fence** — Bind consumer claims to cursor + fence tokens; refuse completeness claims after fence break.
+It refuses claims when:
 
-## Target roles
+- the consumer is on a superseded fence epoch;
+- the fence token does not match;
+- completeness extends beyond acknowledged work;
+- an observed/unacknowledged tail remains;
+- pending entries remain;
+- claim-chain identities disagree;
+- fence epoch or cursor regresses;
+- the previous claim chain is broken or referenced without its receipt.
 
-- Applied AI Systems Engineer
-- Forward-Deployed Engineer
+Valid claims emit a deterministic `claim_digest`, making successive completeness statements a monotonic receipt chain rather than unbound prose.
 
-## Application move
+## Run
 
-Lead with a small, inspectable Stream Claim Cursor Fence exhibit and explicit non-affiliation boundary.
+```bash
+python -m pytest -q
+python scripts/operate.py
+```
 
-## Current scaffold state
+Build and install:
 
-This leaf is a **scaffold**: contracts, tests, and a stub mechanism exist so another engineer/AI can fill production-grade code without inventing company affiliation.
+```bash
+python -m pip install build
+python -m build
+python -m pip install dist/*.whl
+stream-claim-cursor-fence
+```
 
-| Surface | Path |
-|---------|------|
-| Mechanism stub | `src/stream_claim_cursor_fence.py` |
-| Operate entry | `scripts/operate.py` |
-| Contract tests | `tests/` |
-| Target contract | `machine/target-contract.json` |
-| **AI fill-in brief** | **`DEV_UP_INSTRUCTIONS.md`** |
-| Issue contract | `ISSUE_CONTRACT.md` |
+## Proof surface
 
-## Non-claims
+- `src/stream_claim_cursor_fence.py` — cursor/fence/claim-chain verifier
+- `src/stream_claim_cli.py` — installable execution surface
+- `tests/test_stream_claim_cursor_fence.py` — failover, pending, ack, regression and chain behavior
+- `tests/test_adversarial.py` — fail-closed adversarial coverage
+- `.github/workflows/tests.yml` — tests + cold-start + wheel build/install + installed CLI
+- `machine/` — existing Helix control-plane and promotion surfaces remain preserved
 
-- No Redis employment, endorsement, proprietary data, or production use
-- No customer, revenue, latency, or scale claims without separate receipts
-- Scaffold tests define **intended behavior**, not verified production excellence
+## Current boundary
 
-## Next gate
-
-Implement mechanism + positive tests + operate receipt.
+This is a vendor-neutral claim verifier over normalized stream state. It does not control Redis infrastructure or claim production completeness guarantees. The next depth step is a disposable Redis Streams adapter that captures consumer-group cursors and failover epochs and feeds them into this same proof contract.
