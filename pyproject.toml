@@ -1,9 +1,20 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
 [project]
 name = "redis-stream-claim-cursor-fence"
-version = "0.0.1"
-description = "Scaffold: Stream Claim Cursor Fence (independent Redis lens)"
+version = "1.0.0"
+description = "Failover-safe stream completeness claims bound to cursor and fencing epoch"
 requires-python = ">=3.11"
 dependencies = []
+
+[project.scripts]
+stream-claim-cursor-fence = "stream_claim_cli:main"
+
+[tool.setuptools]
+py-modules = ["stream_claim_cursor_fence", "stream_claim_cli", "promotion_authority"]
+package-dir = {"" = "src"}
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
